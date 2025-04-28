@@ -28,6 +28,7 @@ class Contract(models.Model):
     name = models.CharField(max_length=100)
     status = models.CharField(choices=ContractStatus, default=ContractStatus.DRAFT)
     last_update = models.DateTimeField(default=now, editable=True)
+    objects = models.Manager()
 
     def __str__(self) -> str:
         return f"{self.name}"
