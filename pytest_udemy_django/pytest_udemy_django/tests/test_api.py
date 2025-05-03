@@ -11,22 +11,20 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
 
 DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
 CONTRACTS_URL = reverse(viewname="contracts-list")
+pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.django_db
 def test_contract_magic_stringify_works() -> None:
     contract_object = Contract(name="Test Contract")
     assert str(contract_object) == "Test Contract"
 
 
-@pytest.mark.django_db
 def test_zero_contracts_should_return_empty_list(client) -> None:
     response = client.get(CONTRACTS_URL)
     assert response.status_code == 200
     assert json.loads(response.content) == []
 
 
-@pytest.mark.django_db
 def test_contract_creation_and_retrieval(client) -> None:
     test_contract = Contract.objects.create(
         name="Test Ruerup Contract",
@@ -40,14 +38,12 @@ def test_contract_creation_and_retrieval(client) -> None:
     test_contract.delete()
 
 
-@pytest.mark.django_db
 def test_post_empty_returns_error_and_info(client):
     response = client.post(CONTRACTS_URL)
     assert response.status_code == 400
     assert json.loads(response.content) == {"name": ["This field is required."]}
 
 
-@pytest.mark.django_db
 def test_post_company_already_exists(client):
     test_contract = Contract.objects.create(name="Unique Name")
     response = client.post(CONTRACTS_URL, data={"name": test_contract.name})
@@ -57,7 +53,6 @@ def test_post_company_already_exists(client):
     }
 
 
-@pytest.mark.django_db
 def test_post_successful(client):
     test_company_name = "Test Company Name"
     response = client.post(CONTRACTS_URL, data={"name": test_company_name})
