@@ -34,7 +34,7 @@ class TestGetContracts(BasicInitialization):
     def test_contract_creation_and_retrieval(self) -> None:
         test_contract = Contract.objects.create(
             name="Test Ruerup Contract",
-            notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+            notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
         )
         response = self.client.get(self.contracts_url)
         response_content = json.loads(response.content)[0]
@@ -49,8 +49,7 @@ class TestPostContracts(BasicInitialization):
         response = self.client.post(self.contracts_url)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            json.loads(response.content),
-            {"name": ["This field is required."], "notes": ["This field is required."]},
+            json.loads(response.content), {"name": ["This field is required."]}
         )
 
     def test_post_company_already_exists(self):
@@ -61,8 +60,22 @@ class TestPostContracts(BasicInitialization):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {
-                "name": ["contract with this name already exists."],
-                "notes": ["This field is required."],
-            },
+            {"name": ["contract with this name already exists."]},
         )
+
+    def test_post_successful(self):
+        test_company_name = "Test Company Name"
+        response = self.client.post(
+            self.contracts_url, data={"name": test_company_name}
+        )
+        self.assertEqual(response.status_code, 201)
+        response_content = json.loads(response.content)
+        self.assertEqual(response_content.get("name"), test_company_name)
+        self.assertEqual(response_content.get("status"), "Draft")
+        self.assertEqual(response_content.get("notes"), "")
+        self.assertIsNotNone(response_content.get("id"))
+        self.assertIsNotNone(response_content.get("last_update"))
+
+    @pytest.mark.xfail
+    def test_should_fail(self):
+        self.assertEqual(1, 2)
