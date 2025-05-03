@@ -14,35 +14,40 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
 DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
 
 
-class TestContractStringify(TestCase):
-    def test_contract_magic_stringify_workd(self) -> None:
+@pytest.mark.django_db
+class BasicInitialization(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+        self.contracts_url = reverse(viewname="contracts-list")
+
+
+class TestGetContracts(BasicInitialization):
+    def test_contract_magic_stringify_works(self) -> None:
+        """Test that the string representation of a Contract object works as expected"""
         contract_object = Contract(name="Test Contract")
         self.assertEqual(str(contract_object), "Test Contract")
 
-
-class TestGetContracts(TestCase):
-    """Class containint my GET Contracts tests"""
-
-    @pytest.mark.django_db
     def test_zero_contracts_should_return_empty_list(self) -> None:
-        """No contracts - GET should return empty list"""
-        client = Client()
-        contracts_url = reverse(viewname="contracts-list")
-        response = client.get(contracts_url)
+        """No contracts in test database yet, so GET should return an empty list"""
+        response = self.client.get(self.contracts_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), [])
 
-
-class TestOneContract(TestCase):
-    """Class containint my GET Contracts tests"""
-
-    @pytest.mark.django_db
-    def test_zero_contracts_should_return_empty_list(self) -> None:
-        """No contracts - GET should return empty list"""
-        client = Client()
-        contract = Contract.objects.create(name="Test Ruerup Contract")
-        contracts_url = reverse(viewname="contracts-list")
-        response = client.get(contracts_url)
+    def test_contract_creation_and_retrieval(self) -> None:
+        """Test contract creation and retrieval"""
+        test_contract = Contract.objects.create(
+            name="Test Ruerup Contract",
+            notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        )
+        response = self.client.get(self.contracts_url)
         response_content = json.loads(response.content)[0]
-        self.assertEqual(response_content.get("name"), "Test Ruerup Contract")
+        self.assertEqual(response_content.get("name"), test_contract.name)
         self.assertEqual(response_content.get("status"), "Draft")
+        self.assertEqual(response_content.get("notes"), test_contract.notes)
+        test_contract.delete()
+
+
+class TestPostContracts(BasicInitialization):
+    def test_post_empty_returns_400(self):
+        response = self.client.post(self.contracts_url)
+        self.assertEqual(response.status_code, 400)
