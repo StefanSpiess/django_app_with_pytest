@@ -23,18 +23,15 @@ class BasicInitialization(TestCase):
 
 class TestGetContracts(BasicInitialization):
     def test_contract_magic_stringify_works(self) -> None:
-        """Test that the string representation of a Contract object works as expected"""
         contract_object = Contract(name="Test Contract")
         self.assertEqual(str(contract_object), "Test Contract")
 
     def test_zero_contracts_should_return_empty_list(self) -> None:
-        """No contracts in test database yet, so GET should return an empty list"""
         response = self.client.get(self.contracts_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), [])
 
     def test_contract_creation_and_retrieval(self) -> None:
-        """Test contract creation and retrieval"""
         test_contract = Contract.objects.create(
             name="Test Ruerup Contract",
             notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
@@ -54,4 +51,18 @@ class TestPostContracts(BasicInitialization):
         self.assertEqual(
             json.loads(response.content),
             {"name": ["This field is required."], "notes": ["This field is required."]},
+        )
+
+    def test_post_company_already_exists(self):
+        test_contract = Contract.objects.create(name="Unique Name")
+        response = self.client.post(
+            self.contracts_url, data={"name": test_contract.name}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            {
+                "name": ["contract with this name already exists."],
+                "notes": ["This field is required."],
+            },
         )
