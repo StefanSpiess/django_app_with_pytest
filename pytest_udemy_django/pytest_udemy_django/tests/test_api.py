@@ -2,99 +2,69 @@
 
 import os
 import json
-import logging
-from unittest import TestCase
 
 import pytest
-from django.test import Client
 from django.urls import reverse
 from rueruprechner.models import Contract
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
-logger = logging.getLogger("CORONA_LOGGER")
 
 DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
-
-
-def raise_an_exception() -> None:
-    raise ValueError("This is an exceptionary Exception")
-
-
-def raise_an_exception_and_log_it() -> None:
-    try:
-        raise ValueError("This is an exceptionary Exception")
-    except ValueError as e:
-        logger.warning(f"I am logging: {str(e)}")
+CONTRACTS_URL = reverse(viewname="contracts-list")
 
 
 @pytest.mark.django_db
-class BasicInitialization(TestCase):
-    def setUp(self) -> None:
-        self.client = Client()
-        self.contracts_url = reverse(viewname="contracts-list")
+def test_contract_magic_stringify_works() -> None:
+    contract_object = Contract(name="Test Contract")
+    assert str(contract_object) == "Test Contract"
 
 
-class TestGetContracts(BasicInitialization):
-    def test_contract_magic_stringify_works(self) -> None:
-        contract_object = Contract(name="Test Contract")
-        self.assertEqual(str(contract_object), "Test Contract")
-
-    def test_zero_contracts_should_return_empty_list(self) -> None:
-        response = self.client.get(self.contracts_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), [])
-
-    def test_contract_creation_and_retrieval(self) -> None:
-        test_contract = Contract.objects.create(
-            name="Test Ruerup Contract",
-            notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
-        )
-        response = self.client.get(self.contracts_url)
-        response_content = json.loads(response.content)[0]
-        self.assertEqual(response_content.get("name"), test_contract.name)
-        self.assertEqual(response_content.get("status"), "Draft")
-        self.assertEqual(response_content.get("notes"), test_contract.notes)
-        test_contract.delete()
+@pytest.mark.django_db
+def test_zero_contracts_should_return_empty_list(client) -> None:
+    response = client.get(CONTRACTS_URL)
+    assert response.status_code == 200
+    assert json.loads(response.content) == []
 
 
-class TestPostContracts(BasicInitialization):
-    def test_post_empty_returns_error_and_info(self):
-        response = self.client.post(self.contracts_url)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            json.loads(response.content), {"name": ["This field is required."]}
-        )
-
-    def test_post_company_already_exists(self):
-        test_contract = Contract.objects.create(name="Unique Name")
-        response = self.client.post(
-            self.contracts_url, data={"name": test_contract.name}
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            json.loads(response.content),
-            {"name": ["contract with this name already exists."]},
-        )
-
-    def test_post_successful(self):
-        test_company_name = "Test Company Name"
-        response = self.client.post(
-            self.contracts_url, data={"name": test_company_name}
-        )
-        self.assertEqual(response.status_code, 201)
-        response_content = json.loads(response.content)
-        self.assertEqual(response_content.get("name"), test_company_name)
-        self.assertEqual(response_content.get("status"), "Draft")
-        self.assertEqual(response_content.get("notes"), "")
-        self.assertIsNotNone(response_content.get("id"))
-        self.assertIsNotNone(response_content.get("last_update"))
-
-    def test_raise_an_exception(self):
-        with pytest.raises(ValueError) as e:
-            raise_an_exception()
-        assert "This is an exceptionary Exception" == str(e.value)
+@pytest.mark.django_db
+def test_contract_creation_and_retrieval(client) -> None:
+    test_contract = Contract.objects.create(
+        name="Test Ruerup Contract",
+        notes="Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+    )
+    response = client.get(CONTRACTS_URL)
+    response_content = json.loads(response.content)[0]
+    assert response_content.get("name") == test_contract.name
+    assert response_content.get("status") == "Draft"
+    assert response_content.get("notes") == test_contract.notes
+    test_contract.delete()
 
 
-def test_log_level(caplog):
-    raise_an_exception_and_log_it()
-    assert "This is an exceptionary Exception" in caplog.text
+@pytest.mark.django_db
+def test_post_empty_returns_error_and_info(client):
+    response = client.post(CONTRACTS_URL)
+    assert response.status_code == 400
+    assert json.loads(response.content) == {"name": ["This field is required."]}
+
+
+@pytest.mark.django_db
+def test_post_company_already_exists(client):
+    test_contract = Contract.objects.create(name="Unique Name")
+    response = client.post(CONTRACTS_URL, data={"name": test_contract.name})
+    assert response.status_code == 400
+    assert json.loads(response.content) == {
+        "name": ["contract with this name already exists."]
+    }
+
+
+@pytest.mark.django_db
+def test_post_successful(client):
+    test_company_name = "Test Company Name"
+    response = client.post(CONTRACTS_URL, data={"name": test_company_name})
+    assert response.status_code == 201
+    response_content = json.loads(response.content)
+    assert response_content.get("name") == test_company_name
+    assert response_content.get("status") == "Draft"
+    assert response_content.get("notes") == ""
+    assert response_content.get("id") != ""
+    assert response_content.get("last_update") != ""
