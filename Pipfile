@@ -9,6 +9,7 @@ djangorestframework = "*"
 black = "*"
 pytest-django = "*"
 requests = "*"
+pytest-cov = "*"
 
 [dev-packages]
 
