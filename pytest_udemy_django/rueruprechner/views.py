@@ -2,8 +2,8 @@
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
-from rueruprechner.serializers import ContractSerializer
-from rueruprechner.models import Contract
+from rueruprechner.serializers import ContractSerializer, VendorSerializer
+from rueruprechner.models import Contract, Vendor
 
 
 class ContractViewSet(ModelViewSet):
@@ -11,4 +11,12 @@ class ContractViewSet(ModelViewSet):
 
     serializer_class = ContractSerializer
     queryset = Contract.objects.all().order_by("-last_update")
+    pagination_class = PageNumberPagination
+
+
+class VendorViewSet(ModelViewSet):
+    "ModeViewSet for ruerup Vendor model"
+
+    serializer_class = VendorSerializer
+    queryset = Vendor.objects.all().order_by("-last_update")
     pagination_class = PageNumberPagination

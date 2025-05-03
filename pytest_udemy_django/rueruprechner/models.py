@@ -33,3 +33,29 @@ class Contract(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+
+class Vendor(models.Model):
+    """A specific vendor of ruerup products
+
+    These are vile companies that try to talk people
+    into signing ruerup contract to buy their products."""
+
+    class VendorCategory(models.TextChoices):
+        """The class of a vendor
+
+        Roughly speaking: this is the categorization
+        of the vileness of a vendor. In realitiy,
+        vileness is obviously located on a seamlessly
+        scaling continuum."""
+
+        UNKNOWN = "Unknown"
+        MOSTLY_HONEST = "Mostly honest"
+        PRETTY_VILE = "Pretty vile"
+        PURE_EVIL = "Pure evil"
+
+    name = models.CharField(max_length=120, unique=True)
+    vileness = models.CharField(choices=VendorCategory, default=VendorCategory.UNKNOWN)
+    last_update = models.DateTimeField(default=now, editable=True)
+    objects = models.Manager()
+    notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")
