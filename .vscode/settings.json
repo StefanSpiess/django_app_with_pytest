@@ -1,6 +1,6 @@
 {
     "python.testing.pytestArgs": [
-        "pytest_udemy_django", "-v"
+        "pytest_udemy_django", "-v", "--cov-report=html"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
