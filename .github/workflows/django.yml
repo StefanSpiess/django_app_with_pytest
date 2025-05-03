@@ -33,4 +33,4 @@ jobs:
       - name: Run Django tests with pytest and coverage
         env:
           DJANGO_SETTINGS_MODULE: pytest_udemy_django.settings
-        run: pipenv run pytest -p --cov=. --cov-report=xml --maxfail=5 --disable-warnings -v
+        run: pipenv run pytest --cov=. --cov-report=xml --maxfail=5 --disable-warnings -v
