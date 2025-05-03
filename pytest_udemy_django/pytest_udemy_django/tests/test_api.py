@@ -9,8 +9,8 @@ from rueruprechner.models import Contract
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
 
-DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
 CONTRACTS_URL = reverse(viewname="contracts-list")
+
 pytestmark = pytest.mark.django_db
 
 
