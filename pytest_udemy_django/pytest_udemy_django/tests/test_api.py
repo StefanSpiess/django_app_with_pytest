@@ -14,6 +14,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
 DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
 
 
+def raise_an_exception() -> None:
+    raise ValueError("This is an exceptionary Exception")
+
+
 @pytest.mark.django_db
 class BasicInitialization(TestCase):
     def setUp(self) -> None:
@@ -76,6 +80,7 @@ class TestPostContracts(BasicInitialization):
         self.assertIsNotNone(response_content.get("id"))
         self.assertIsNotNone(response_content.get("last_update"))
 
-    @pytest.mark.xfail
-    def test_should_fail(self):
-        self.assertEqual(1, 2)
+    def test_raise_an_exception(self):
+        with pytest.raises(ValueError) as e:
+            raise_an_exception()
+        assert "This is an exceptionary Exception" == str(e.value)
