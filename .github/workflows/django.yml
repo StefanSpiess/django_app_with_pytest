@@ -1,23 +1,33 @@
-name: Project Tests
+name: Django Tests
+
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     branches:
-      - main 
+      - main
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.10.0
-      - name: Run tests
-        run: |
-          pipenv install --default
-          pipenv run pytest
+          python-version: 3.12  # Match your local Python version
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --dev
+
+      - name: Run Django tests with pytest
+        env:
+          DJANGO_SETTINGS_MODULE: pytest_udemy_django.settings
+        run: pipenv run pytest --maxfail=5 --disable-warnings -v
