@@ -2,6 +2,7 @@
 
 import os
 import json
+import logging
 from unittest import TestCase
 
 import pytest
@@ -10,12 +11,20 @@ from django.urls import reverse
 from rueruprechner.models import Contract
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pytest_udemy_django.settings")
+logger = logging.getLogger("CORONA_LOGGER")
 
 DJANGO_SETTINGS_MODULE = "/home/steve/repositories/RuerupRechnerWebApplication/pytest_udemy_django/pytest_udemy_django/pytest_udemy_django/settings.py"
 
 
 def raise_an_exception() -> None:
     raise ValueError("This is an exceptionary Exception")
+
+
+def raise_an_exception_and_log_it() -> None:
+    try:
+        raise ValueError("This is an exceptionary Exception")
+    except ValueError as e:
+        logger.warning(f"I am logging: {str(e)}")
 
 
 @pytest.mark.django_db
@@ -84,3 +93,8 @@ class TestPostContracts(BasicInitialization):
         with pytest.raises(ValueError) as e:
             raise_an_exception()
         assert "This is an exceptionary Exception" == str(e.value)
+
+
+def test_log_level(caplog):
+    raise_an_exception_and_log_it()
+    assert "This is an exceptionary Exception" in caplog.text
