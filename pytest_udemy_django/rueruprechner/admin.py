@@ -1,7 +1,7 @@
 """Register your models here"""
 
 from django.contrib import admin
-from .models import Contract
+from rueruprechner.models import Contract
 
 
 @admin.register(Contract)

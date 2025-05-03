@@ -1,10 +1,9 @@
 """To view or not to view?"""
 
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
-from .serializers import ContractSerializer
-from .models import Contract
+from rueruprechner.serializers import ContractSerializer
+from rueruprechner.models import Contract
 
 
 class ContractViewSet(ModelViewSet):

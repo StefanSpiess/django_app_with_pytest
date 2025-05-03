@@ -1,7 +1,7 @@
 """Rest API Serializers for RuerupRechner"""
 
 from rest_framework import serializers
-from .models import Contract
+from rueruprechner.models import Contract
 
 
 class ContractSerializer(serializers.ModelSerializer):
