@@ -30,7 +30,7 @@ jobs:
       - name: Add project to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:${GITHUB_WORKSPACE}/pytest_udemy_django" >> $GITHUB_ENV
 
-      - name: Run Django tests with pytest
+      - name: Run Django tests with pytest and coverage
         env:
           DJANGO_SETTINGS_MODULE: pytest_udemy_django.settings
-        run: pipenv run pytest --maxfail=5 --disable-warnings -v
+        run: pipenv run pytest --cov=pytest_udemy_django --cov-report=xml --maxfail=5 --disable-warnings -v
