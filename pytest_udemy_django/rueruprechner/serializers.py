@@ -11,4 +11,4 @@ class ContractSerializer(serializers.ModelSerializer):
         """Metamodel definition for ContractSerializer"""
 
         model = Contract
-        fields = ["id", "name", "status", "last_update"]
+        fields = ["id", "name", "status", "last_update", "notes"]
