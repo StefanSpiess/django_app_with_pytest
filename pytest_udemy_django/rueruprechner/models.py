@@ -29,7 +29,7 @@ class Contract(models.Model):
     status = models.CharField(choices=ContractStatus, default=ContractStatus.DRAFT)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
-    notes = models.TextField(verbose_name="Personal Notes", max_length=None)
+    notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")
 
     def __str__(self) -> str:
         return f"{self.name}"
