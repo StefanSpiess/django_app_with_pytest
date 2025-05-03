@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: pipenv install --dev
 
+      - name: Add project to PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:${GITHUB_WORKSPACE}/pytest_udemy_django" >> $GITHUB_ENV
+
       - name: Run Django tests with pytest
         env:
           DJANGO_SETTINGS_MODULE: pytest_udemy_django.settings
