@@ -48,6 +48,10 @@ class TestGetContracts(BasicInitialization):
 
 
 class TestPostContracts(BasicInitialization):
-    def test_post_empty_returns_400(self):
+    def test_post_empty_returns_error_and_info(self):
         response = self.client.post(self.contracts_url)
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            {"name": ["This field is required."], "notes": ["This field is required."]},
+        )

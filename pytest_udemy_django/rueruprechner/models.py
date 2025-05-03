@@ -25,7 +25,7 @@ class Contract(models.Model):
         PENDING_REVIEW = "Pending Review"
         CONFIRMED = "Confirmed"
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     status = models.CharField(choices=ContractStatus, default=ContractStatus.DRAFT)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
