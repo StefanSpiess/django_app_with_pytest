@@ -12,7 +12,7 @@
             "args": [
                 "runserver"
             ],
-            "django": true,
+            "django": false,
             "autoStartBrowser": false,
             "program": "${workspaceFolder}/pytest_udemy_django/manage.py"
         }
