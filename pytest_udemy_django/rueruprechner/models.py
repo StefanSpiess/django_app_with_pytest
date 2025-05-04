@@ -59,3 +59,24 @@ class Vendor(models.Model):
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
     notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")
+
+
+class VendorProposal(Vendor):
+    """A proposal for a new vendor by a user
+
+    These should later be easily transformable
+    to a Vendor Class object. I would not usually
+    implement this feature the way I did (via
+    e-mail) but for the sake of the udemy course
+    I did so."""
+
+    class VendorProposalStatus(models.TextChoices):
+        """Status choice for a VendorProposal"""
+
+        NEW = "New"
+        ACCEPTED = "Accepted"
+        REJECTED = "Rejected"
+
+    proposal_status = models.CharField(
+        choices=VendorProposalStatus, default=VendorProposalStatus.NEW, editable=False
+    )
