@@ -25,7 +25,7 @@ class Contract(models.Model):
         PENDING_REVIEW = "Pending Review"
         CONFIRMED = "Confirmed"
 
-    name = models.CharField(max_length=100, unique=True, default="")
+    name = models.CharField(max_length=100, unique=True)
     status = models.CharField(choices=ContractStatus, default=ContractStatus.DRAFT)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
@@ -54,7 +54,7 @@ class Vendor(models.Model):
         PRETTY_VILE = "Pretty vile"
         PURE_EVIL = "Pure evil"
 
-    name = models.CharField(max_length=120, unique=True, default="")
+    name = models.CharField(max_length=120, unique=True)
     vileness = models.CharField(choices=VendorCategory, default=VendorCategory.UNKNOWN)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
