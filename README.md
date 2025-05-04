@@ -22,7 +22,7 @@ Follow these steps to set up the project locally:
    Install dependencies using `pipenv`:
    ```bash
    pip install pipenv
-   pipenv install --dev
+   pipenv install --default
    ```
 
 3. **Apply Database Migrations**:
