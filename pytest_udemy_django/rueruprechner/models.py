@@ -25,7 +25,7 @@ class Contract(models.Model):
         PENDING_REVIEW = "Pending Review"
         CONFIRMED = "Confirmed"
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, default="")
     status = models.CharField(choices=ContractStatus, default=ContractStatus.DRAFT)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
@@ -54,14 +54,14 @@ class Vendor(models.Model):
         PRETTY_VILE = "Pretty vile"
         PURE_EVIL = "Pure evil"
 
-    name = models.CharField(max_length=120, unique=True)
+    name = models.CharField(max_length=120, unique=True, default="")
     vileness = models.CharField(choices=VendorCategory, default=VendorCategory.UNKNOWN)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
     notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")
 
 
-class VendorProposal(Vendor):
+class VendorProposal(models.Model):
     """A proposal for a new vendor by a user
 
     These should later be easily transformable
@@ -77,6 +77,26 @@ class VendorProposal(Vendor):
         ACCEPTED = "Accepted"
         REJECTED = "Rejected"
 
+    class VendorProposalCategory(models.TextChoices):
+        """The class of a vendor
+
+        Roughly speaking: this is the categorization
+        of the vileness of a vendor. In realitiy,
+        vileness is obviously located on a seamlessly
+        scaling continuum."""
+
+        UNKNOWN = "Unknown"
+        MOSTLY_HONEST = "Mostly honest"
+        PRETTY_VILE = "Pretty vile"
+        PURE_EVIL = "Pure evil"
+
+    objects = models.Manager()
+    name = models.CharField(max_length=120, unique=True, default="")
+    vileness = models.CharField(
+        choices=VendorProposalCategory, default=VendorProposalCategory.UNKNOWN
+    )
+    last_update = models.DateTimeField(default=now, editable=True)
+    notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")
     proposal_status = models.CharField(
         choices=VendorProposalStatus, default=VendorProposalStatus.NEW, editable=False
     )

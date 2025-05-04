@@ -24,7 +24,7 @@ class VendorSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "vileness", "last_update", "notes"]
 
 
-class VendorSerializer(serializers.ModelSerializer):
+class VendorProposalSerializer(serializers.ModelSerializer):
     """Serialize VendorProposal model from database to JSON"""
 
     class Meta:
