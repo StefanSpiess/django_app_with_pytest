@@ -18,7 +18,7 @@ my_router.register(
 )
 
 my_router.register(
-    prefix="vendors",
+    prefix="vendorproposals",
     viewset=VendorProposalViewSet,
-    basename="vendors",
+    basename="vendorproposals",
 )
