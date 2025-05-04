@@ -38,6 +38,7 @@ def test_contract_creation_and_retrieval(client) -> None:
     assert response_content.get("notes") == test_contract.notes
     test_contract.delete()
 
+
 def test_post_empty_returns_error_and_info(client):
     response = client.post(VENDOR_URL)
     assert response.status_code == 400
@@ -52,6 +53,7 @@ def test_post_company_already_exists(client):
         "name": ["contract with this name already exists."]
     }
     test_contract.delete()
+
 
 def test_post_successful(client):
     test_company_name = "Test Company Name"
