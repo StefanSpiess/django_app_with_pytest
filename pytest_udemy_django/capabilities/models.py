@@ -33,8 +33,8 @@ class Project(models.Model):
         Only contracts that have been checked for
         integrity are added to the database."""
 
-        DEFAULT = ""
-        BMW = "BMW1302"
+        DEFAULT = "TBD",
+        BMW = "BMW1302",
         SWM = "SWM0047"
 
     name = models.CharField(max_length=100, unique=True)
