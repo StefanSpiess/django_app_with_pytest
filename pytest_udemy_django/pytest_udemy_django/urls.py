@@ -17,6 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from rueruprechner.urls import my_router
+from rueruprechner.urls import my_router as rueruprechner_router
+from capabilities.urls import router as capabilities_router
 
-urlpatterns = [path("admin/", admin.site.urls), path("", include(my_router.urls))]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include(rueruprechner_router.urls)),
+    path("capabilities/", include(capabilities_router.urls)),
+]
