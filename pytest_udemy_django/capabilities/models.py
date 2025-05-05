@@ -25,18 +25,17 @@ class Project(models.Model):
         CONFIRMED = "Confirmed"
         ONGOING = "Ongoing"
         DONE = "Done"
-    
+
     class ProjectKey(models.TextChoices):
         """The status of the contract
 
         Subject to review by the RuerupRechner Team.
         Only contracts that have been checked for
         integrity are added to the database."""
-        
+
         DEFAULT = ""
         BMW = "BMW1302"
         SWM = "SWM0047"
-        
 
     name = models.CharField(max_length=100, unique=True)
     status = models.CharField(choices=ProjectStatus, default=ProjectStatus.NOT_STARTED)

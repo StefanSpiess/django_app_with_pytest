@@ -17,11 +17,20 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
 from rueruprechner.urls import my_router as rueruprechner_router
 from capabilities.urls import router as capabilities_router
 
+
+def api_root(request):
+    return HttpResponse(
+        "Welcome to the API Root. Available endpoints: /rueruprechner/, /capabilities/"
+    )
+
+
 urlpatterns = [
+    path("", api_root, name="api-root"),
     path("admin/", admin.site.urls),
-    path("", include(rueruprechner_router.urls)),
-    path("", include(capabilities_router.urls)),
+    path("rueruprechner/", include(rueruprechner_router.urls)),
+    path("capabilities/", include(capabilities_router.urls)),
 ]

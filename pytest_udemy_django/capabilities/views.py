@@ -5,8 +5,9 @@ from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 
+
 class ProjectViewSet(ModelViewSet):
-    "ModeViewSet for ruerup Contract model"
+    "ModeViewSet for Project model"
 
     serializer_class = ProjectSerializer
     queryset = Project.objects.all().order_by("-last_update")
