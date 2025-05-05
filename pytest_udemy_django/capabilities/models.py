@@ -33,13 +33,13 @@ class Project(models.Model):
         Only contracts that have been checked for
         integrity are added to the database."""
 
-        DEFAULT = "TBD",
-        BMW = "BMW1302",
-        SWM = "SWM0047"
+        UNDEFINED = "TBD", "TBD"
+        BMW = "BMW1302", "BMW1302"
+        SWM = "SWM0047", "SWM0047"
 
     name = models.CharField(max_length=100, unique=True)
     status = models.CharField(choices=ProjectStatus, default=ProjectStatus.NOT_STARTED)
-    project_key = models.CharField(choices=ProjectKey, default=ProjectKey.DEFAULT)
+    project_key = models.CharField(choices=ProjectKey, default=ProjectKey.UNDEFINED)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
     notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")

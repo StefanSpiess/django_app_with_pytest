@@ -16,15 +16,32 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse
 from django.http import HttpResponse
+from django.utils.html import format_html
 from rueruprechner.urls import my_router as rueruprechner_router
 from capabilities.urls import router as capabilities_router
 
 
 def api_root(request):
+    links = [
+        format_html('<li><a href="{}">{}</a></li>', reverse(pattern.name), pattern.name)
+        for pattern in urlpatterns
+        if hasattr(pattern, 'name') and pattern.name
+    ]
+
+    # Add top-level links manually for routers
+    top_level_links = [
+        format_html('<li><a href="/admin/">Admin</a></li>'),
+        format_html('<li><a href="/rueruprechner/">Ruerup Rechner</a></li>'),
+        format_html('<li><a href="/capabilities/">Capabilities</a></li>'),
+    ]
+
     return HttpResponse(
-        "Welcome to the API Root. Available endpoints: /rueruprechner/, /capabilities/"
+        format_html(
+            "<h1>Welcome to the API Root</h1><ul>{}</ul>",
+            format_html("".join(top_level_links))
+        )
     )
 
 
