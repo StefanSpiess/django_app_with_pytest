@@ -40,7 +40,7 @@ class Project(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     status = models.CharField(choices=ProjectStatus, default=ProjectStatus.NOT_STARTED)
-    status = models.CharField(choices=ProjectKey, default=ProjectKey.DEFAULT)
+    project_key = models.CharField(choices=ProjectKey, default=ProjectKey.DEFAULT)
     last_update = models.DateTimeField(default=now, editable=True)
     objects = models.Manager()
     notes = models.TextField(verbose_name="Personal Notes", max_length=None, default="")

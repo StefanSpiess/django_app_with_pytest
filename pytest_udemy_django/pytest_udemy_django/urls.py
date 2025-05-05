@@ -23,5 +23,5 @@ from capabilities.urls import router as capabilities_router
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(rueruprechner_router.urls)),
-    path("capabilities/", include(capabilities_router.urls)),
+    path("", include(capabilities_router.urls)),
 ]
