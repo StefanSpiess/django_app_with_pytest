@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rueruprechner",
     "rest_framework",
+    "capabilities",
 ]
 
 MIDDLEWARE = [
