@@ -5,21 +5,14 @@ from django.utils.timezone import now
 
 
 class Project(models.Model):
-    """A specific ruerup contract
-
-    A ruerup contract is a specific German variant
-    of private rent system which is subsidized by
-    the state and freezes the invested capital
-    completely until you reach the age where you are
-    entitled to receive rent payments.
+    """A Project
+    
     """
 
     class ProjectStatus(models.TextChoices):
-        """The status of the contract
-
-        Subject to review by the RuerupRechner Team.
-        Only contracts that have been checked for
-        integrity are added to the database."""
+        """Possible status values
+        
+        """
 
         NOT_STARTED = "Pending Confirmation"
         CONFIRMED = "Confirmed"
@@ -27,11 +20,9 @@ class Project(models.Model):
         DONE = "Done"
 
     class ProjectKey(models.TextChoices):
-        """The status of the contract
-
-        Subject to review by the RuerupRechner Team.
-        Only contracts that have been checked for
-        integrity are added to the database."""
+        """Available Project Keys
+        
+        """
 
         UNDEFINED = "TBD", "TBD"
         BMW = "BMW1302", "BMW1302"
